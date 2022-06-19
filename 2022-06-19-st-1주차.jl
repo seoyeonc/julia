@@ -240,6 +240,9 @@ md"### 다중선택"
 # ╔═╡ 1c4b0f14-763e-4a12-8e6d-ffcd03ad7a64
 enrllmnt
 
+# ╔═╡ be5ceeac-3634-40fa-9ce9-eb00b646f589
+md"shift 누르고 클릭하면 선택된다."
+
 # ╔═╡ dee6a43f-64dc-4e85-a77f-f5f1ab495531
 md"### 슬라이더($\star$)"
 
@@ -276,11 +279,17 @@ md"$ax^2+bx+c=0,\quad x=\frac{-b \pm \sqrt{b^2-4ac}}{2a}$"
 # ╔═╡ 914b9d81-d9f5-4289-8a21-3d559e691953
 @bind c Slider(0:10, show_value=true)
 
+# ╔═╡ 08fd2bd6-cfba-4624-8dd5-7aa0c37eebb7
+md"허수면 계산이 되지 않아요~"
+
 # ╔═╡ efbf81e0-be95-4211-bc6e-fd6797854d6d
 (-b + √(b^2-4a*c) ) / 2a 
 
 # ╔═╡ a59f5c2d-d155-449b-8d2c-a79b70b6dee1
 (-b - √(b^2-4a*c) ) / 2a 
+
+# ╔═╡ 8e325882-60a7-4853-9db5-3ba8cf6bdf67
+md"\sqrt 쓰고 tab 누르면 √ 나옴"
 
 # ╔═╡ 7a7b33ea-7a6b-4eef-b5d5-ff776c5372d6
 md"### 색깔선택"
@@ -1260,7 +1269,7 @@ version = "0.9.1+5"
 # ╠═d25144c4-f626-4055-a50b-02cefb4315d3
 # ╠═45ea88cb-fdf0-4100-82c0-307655e6800d
 # ╟─c31eee02-aa0b-4558-8dea-5c83c1097979
-# ╠═82659a1f-9bfd-42dd-826d-329c1fcc28dd
+# ╟─82659a1f-9bfd-42dd-826d-329c1fcc28dd
 # ╠═a529735d-ff00-4cd7-808d-4a3da2676c50
 # ╟─240349e7-c47d-40ee-ad0d-c0bbdb32de17
 # ╠═f4049186-088a-411c-ab65-8142b836ecec
@@ -1272,6 +1281,7 @@ version = "0.9.1+5"
 # ╟─d6191b02-9eb6-4d98-ac46-bc6ae2228606
 # ╠═85bc4445-2ef7-4909-b8a6-54ce04e5ea73
 # ╠═1c4b0f14-763e-4a12-8e6d-ffcd03ad7a64
+# ╠═be5ceeac-3634-40fa-9ce9-eb00b646f589
 # ╟─dee6a43f-64dc-4e85-a77f-f5f1ab495531
 # ╠═14eee490-ac80-4845-b375-c454cfcebe93
 # ╠═889982e3-d360-42a2-8c39-69dc2b4a58db
@@ -1284,8 +1294,10 @@ version = "0.9.1+5"
 # ╠═538fdb3e-7ef3-4fd8-991e-00bd2f4ea555
 # ╠═99cd9b2e-5939-45fb-8720-451745fd0505
 # ╠═914b9d81-d9f5-4289-8a21-3d559e691953
+# ╠═08fd2bd6-cfba-4624-8dd5-7aa0c37eebb7
 # ╠═efbf81e0-be95-4211-bc6e-fd6797854d6d
 # ╠═a59f5c2d-d155-449b-8d2c-a79b70b6dee1
+# ╠═8e325882-60a7-4853-9db5-3ba8cf6bdf67
 # ╟─7a7b33ea-7a6b-4eef-b5d5-ff776c5372d6
 # ╠═f511209f-755c-47ad-998a-ae94df6e6006
 # ╠═4fe79806-7523-4bee-9dbf-f414b428cc5f
