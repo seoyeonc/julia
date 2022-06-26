@@ -4,408 +4,506 @@
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 521890de-ab23-11ec-0c2f-2dcaee6dc1bc
-using Plots, Distributions, PlutoUI
+# This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
+macro bind(def, element)
+    quote
+        local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
+        local el = $(esc(element))
+        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
+        el
+    end
+end
 
-# ╔═╡ dbf8cdd6-7815-49f8-9dd6-5987000792ce
+# ╔═╡ 28f2f684-2f28-4f44-a41c-70ade81e3927
+using Plots, Distributions,PlutoUI,Random
+
+# ╔═╡ 80fe12d2-aa70-4eed-a251-92e481d7e40c
 md"""
-# 3월24일
+# 3월29일 
 """
 
-# ╔═╡ 20697867-c74a-4485-bb97-c6a31060669a
+# ╔═╡ 82d1b56f-303d-4412-af8d-dc3638b5186f
 html"""
 <div style="display: flex; justify-content: center;">
 <div  notthestyle="position: relative; right: 0; top: 0; z-index: 300;">
 <iframe src=
 "
-https://www.youtube.com/embed/playlist?list=PLQqh36zP38-xIz4hvPmHZz0g8g04MJ0xZ
+https://www.youtube.com/embed/playlist?list=PLQqh36zP38-zhn1zsg_GZZtKXLds0caeD
 "
 width=600 height=375  frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 """
 
-# ╔═╡ 64e29d20-aaf5-4fa0-ad03-b283dac52dce
+# ╔═╡ 7f9b98a2-a674-4602-8d91-3923e4d7f5e8
 md"""
-## Usings
+## usings
 """
 
-# ╔═╡ 61967452-a8e0-46a8-85cb-c0944451c5d2
-PlutoUI.TableOfContents(aside=true)
+# ╔═╡ f2990d77-1496-4f7a-996f-a362432f27e6
+PlutoUI.TableOfContents()
 
-# ╔═╡ 3f43a098-0653-4cb3-a48e-673e342ae48b
+# ╔═╡ 81fee780-c9e6-42aa-9dca-0637aa6a92f6
 Plots.plotly()
 
-# ╔═╡ ddae88bf-0b17-40f4-ae33-5cd70aa8a0de
+# ╔═╡ b9a0a929-debb-4c20-bb35-d664826e8642
 md"""
-## 포아송분포 ($X \sim Poi(\lambda)$)
+## 지난시간 강의 보충 및 정정내용 
 """
 
-# ╔═╡ c0e571b7-580a-4b25-ba5b-6cb729ec36b9
+# ╔═╡ ccde90e7-27b4-4c92-8e9a-a19e187535fe
 md"""
-### 포아송분포 요약 
-- X의의미: 발생횟수의 평균이 λ인 분포에서 실제 발생횟수를 X라고 한다. 
-- X의범위: 발생안할수도 있으므로 X=0이 가능. 따라서 X=0,1,2,3,... 
-- 파라메터의 의미와 범위: λ = 평균적인 발생횟수; λ>0. 
-- pdf: 
-- mgf: 
-- E(X): λ
-- V(X): λ
+- 이항분포에서 포아송을 뽑는게 아니고 특정한조건에서 이항분포와 포아송이 비슷해짐 
+- `try_until_you_succeed(p)`는 기하분포를 뽑는 함수 맞아요! 
+- `sample size`를 의미하는 기호를 `N`으로 통일. (`n`은 이항분포의 $n$)
+- 포아송의 역수로 지수분포를 못 뽑는 이유? (1) 0이 나오니까 역수를 취할수 없음 (2) 지수분포는 임의의 양의값이 가능해야 하는데 $\frac{1}{0.5}, \frac{1}{1.5}$와 같은 값은 포아송의 역수로 구할 수 없음. 
+- 강의노트에 제목수준 및 내용을 조금씩 수정함.  
 """
 
-# ╔═╡ d05e9f57-31c0-4c3c-922d-4ac00b399bcd
-md"[이름](링크) _ 링크 다는 법"
-
-# ╔═╡ 7807af0d-012a-432a-9a64-5df4a633333b
+# ╔═╡ 66f787b4-5cda-4883-be6c-b3e9ba5ea3b7
 md"""
-### [포아송분포의 예시](https://www.statology.org/poisson-distribution-real-life-examples/#:~:text=Example%201%3A%20Calls%20per%20Hour,receives%2010%20calls%20per%20hour.)
-
-- 콜센타에 걸려오는 전화의 수, 1시간동안 
-- 레스토랑에 방문하는 손님의 수, 하루동안 
-- 웹사이트를 방문하는 사람의 수, 1시간동안 
-- 파산하는 사람의 수, 1달동안 
-- 네트워크의 끊김 수, 1주일동안 
+## 지수분포
 """
 
-# ╔═╡ 713fc6aa-3cdb-49ad-903c-9127452e69b9
+# ╔═╡ 31a07e09-fac8-4082-be3c-9d83fd0cb09d
 md"""
-### How to generate it?
+### How to generate it 
 """
 
-# ╔═╡ 49500e7a-fc16-48f4-acaf-ce6ccd81207e
+# ╔═╡ 8546e329-714f-4a5f-a7e4-f2dfbf55496d
 md"""
-##### 평균이 3인 포아송분포에서 100개의 샘플을 뽑는 방법 
+(방법1) 모듈 
 """
 
-# ╔═╡ 443fc984-8109-45c3-a6e5-e6e565dd0491
+# ╔═╡ 6ea24d60-1ddc-4462-af52-5009136051f8
 md"""
-(방법1)
+(방법2) 포아송프로세스를 이용
 """
 
-# ╔═╡ 6d30adc5-4da9-4e85-bd47-e128de6fffb2
-rand(Poisson(3),100)
-
-# ╔═╡ 9a9ed77b-903e-4587-967c-518343a62e54
+# ╔═╡ 2f7acc36-892b-4368-ac9b-3ae42e20a681
 md"""
-(방법2) 이항분포의 포아송근사를 이용 
-- 이론: 이항분포에서 (1) $n\to \infty$ (2) $p\to 0$ (3) $np=\lambda$ 이면 이것은 평균이 $\lambda$인 포아송분포로 근사함. 
-- 평균이 $\lambda$인 포아송분포는 $B(n,\frac{\lambda}{n})$로 근사할 수 있다. 이때 $n$이 커질수록 더 정확해짐. 
+(방법3) inverse cdf method
 """
 
-# ╔═╡ b0ca1c8f-272d-4a2f-ac4b-10bd659fceda
-let 
-	N = 10000
-	λ=3 
-	n=10000
-	p=λ/n
-	X = rand(Binomial(n,p),N)
-	Y = rand(Poisson(λ),N)
-	p1= histogram(X)
-	p2= histogram(Y)
-	plot(p1,p2,layout=(2,1))
-end 
-
-# ╔═╡ 32f26826-0860-4f20-830f-1967198b4fee
+# ╔═╡ 662f2f6b-7c45-4a3a-b936-a0cf95a4c908
 md"""
-- $n=100$
-- $ n=100$
-- 표현 방법!
+##### Inverse cdf method motive 
 """
 
-# ╔═╡ 1e943933-7266-4696-9388-6060d0d173e8
+# ╔═╡ 4f98ca0f-580e-46b1-a279-0bfda3d40dd2
 md"""
--  $n=10000$ 정도이면 꽤 비슷함. 
-- 방법2는 근사방법이므로 엄밀히 말하면 분포를 뽑는 기법이라고 볼 수는 없음. 
+`-` 아래와 같은 2개의 지수분포를 고려해보자. 
+- 평균이 1인 지수분포 
+- 평균이 5인 지수분포 
 """
 
-# ╔═╡ 4520bf81-0491-4a47-99c4-45680964654c
-let 
-	λ=3
-	n=60000
-	p=λ/n
-	Δt = (60/n) # 단위가 60초니까 60
-	
-	N = 10000
-	X = [(rand(n) .< p) |> sum for k in 1:N]
-	p1= histogram(X)
-	p2= rand(Poisson(λ),N) |> histogram
-	_p = plot(p1,p2,layout=(2,1)) 
-	
-
-	md"""
-	(방법3) 균등분포 -> 베르누이 -> 이항분포 ≈ 포아송 
-	- 1분동안 맥도날드에 평균 3명이 온다고 생각
-	- 이건 사실 1초에 성공확률이 0.05인 베르누이 시행을 1번 시행하여 1분동안 총 60회 반복한 것으로 이해할 수 있음. 
-	- 좀 더 세밀하게는 $(Δt) 초에 성공확률이 $p 인 베르누이 시행을 1번 시행하여 1분동안 총 $n 회 반복한 것으도 이해할수 있음. (무한반복가능)
-	- 느낌: 하여튼 (1) "엄청 작은 시간"에 (2) "엄청 작은 확률"의 베르누이 시행이 (3) "엄청 많이 독립적으로 반복"되는 느낌을 기억하세요!
-	$(_p)
-	- 위: 유니폼 -> 베르누이 -> 이항분포 ≈ 포아송 
-	- 아래: 포아송
-	"""
-end 
-
-# ╔═╡ ea7e4bb9-5eca-4046-8209-51489614c636
+# ╔═╡ 53fc9117-db8c-424f-9098-e2b887240a72
 md"""
-(방법4) 균등분포 -> inverse cdf method를 이용해서 생성할 수 있음. 
+`-` 두 지수분포에 대한 cdf는 아래와 같다. 
 """
 
-# ╔═╡ 8352dd50-1f7d-4e3d-9365-5af24d43547c
-md"""
-`-` 포아송분포의 합은 다시 포아송분포가 된다. 
-- 이론: $X \sim Poi(\lambda_1), Y\sim Poi(\lambda_2),~ X \perp Y \Rightarrow X + Y \sim Poi(\lambda_1 + \lambda_2)$ 
-- 의미? (1) 1분동안 맥도날드 매장에 들어오는 남자의 수는 평균이 5인 포아송 분포를 따름 (2) 1분동안 맥도날드 매장에 들어오는 여자의 수는 평균이 4.5인 포아송분포를 따름 (3) 남자와 여자가 매장에 오는 사건은 독립 => 1분동안 맥도날드 매장에 오는 사람은 평균이 9.5인 포아송 분포를 따른다는 의미. 
-"""
-
-# ╔═╡ af1c928e-ab6c-4212-88df-e3109503a157
-md"""
-(실습)
-"""
-
-# ╔═╡ 5d376188-fad1-48fb-86a2-7dcc908c337f
-let 
-	N= 1000
-	X = rand(Poisson(5),N)
-	Y = rand(Poisson(4.5),N)
-	p1 = X.+Y |> histogram 
-	p2 = rand(Poisson(9.5),N) |> histogram
-	plot(p1,p2,layout=(2,1))
-end
-
-# ╔═╡ 0ab7a2d2-0d17-4523-8e91-b28624303524
+# ╔═╡ be2dee73-c901-4f3f-aa96-c62a886b7167
 let
-	N=1000
-	λ=5 
-	X = rand(Poisson(λ),N) 
+	p1 = plot(x -> -exp(-x)+1,0,20, title="평균=1")
+	p2 = plot(x -> -exp(-x/5)+1,0,20, title="평균=5")
+	plot(p1, p2, layout=(1,2))
+end
+
+# ╔═╡ 24a3f936-1cda-4d4b-bde7-1dbe81e44909
+md"""
+`-` cdf의 y축에서 랜덤변수를 발생시킨뒤에 $\rightarrow \downarrow$와 같이 이동하여 x축에 내린다고 생각해보자. 
+- 왼쪽: 대부분 5이하에 떨어짐
+- 오른쪽: 대략 60퍼정도만 5이하에 떨어짐 
+"""
+
+# ╔═╡ dbe9914c-da72-41e5-895f-24394097bf22
+md"""
+`-` 구현 
+"""
+
+# ╔═╡ ff22c6d4-7808-4452-8597-f307dd099e7e
+let
+	Finv(x) = -log(1-x) # 평균이 1인 지수분포 cdf의 역함수 
+	Ginv(x) = -5log(1-x) # 평균이 5인 지수분포 cdf의 역함수
+	u = rand(5) # 5개의 샘플을 유니폼에서 추출
+	p1 = plot(x -> -exp(-x)+1,0,20, title="평균=1")
+	scatter!([0,0,0,0,0],u) 
+	scatter!(Finv.(u),[0,0,0,0,0])
+	p2 = plot(x -> -exp(-x/5)+1,0,20, title="평균=5")
+	scatter!([0,0,0,0,0],u)
+	scatter!(Ginv.(u),[0,0,0,0,0])
+	plot(p1, p2, layout=(1,2))	
+end
+
+# ╔═╡ 8507fb19-40e9-4bf7-95f5-c107246723e2
+md"""
+- 빨간색: 균등분포 
+- 초록색: 이게 지수분포 같은데? 
+"""
+
+# ╔═╡ e6db3918-4198-4a46-aa5b-663d6c959369
+md"""
+##### inverse cdf method 알고리즘 정리 
+
+확률변수 $X_1,X_2,\dots,X_n \overset{iid}{\sim} F$ 를 생성하고 싶다면? 
+
+1.  균등분포에서 $n$개의 난수를 독립적으로 생성한다. 이를 $U_1,U_2, \dots U_n$ 이라고 하자. 
+2.  $X_1 = F^{-1}(U_1),X_2=F^{-1}(U_2),\dots, X_n=F^{-1}(U_n)$ 이라고 놓는다. 
+"""
+
+# ╔═╡ 1480a122-73c7-4704-9299-d21fd18feedf
+md"""
+`-` 예제1: inverse cdf 를 이용하여 평균이 1인 지수분포 10000개를 생성하여 보자. 
+"""
+
+# ╔═╡ 5a95784f-89a8-42cc-95a5-9b0310a23ca7
+md"""
+(풀이)
+"""
+
+# ╔═╡ f53186b7-7fbc-4fe7-8f65-223e681e87e5
+rand(10000)
+
+# ╔═╡ f68bd58a-8b00-48ad-8ce1-ba2d19034b95
+let
+	p1= histogram(rand(10000) .|> x -> -log(1-x))
+	p2= histogram(rand(Exponential(1),10000))
+	plot(p1,p2,layout=(2,1))  
+end
+
+# ╔═╡ bc64fe93-e916-49ce-8a1a-084098c2323f
+md"""
+### 지수분포의 무기억성 
+"""
+
+# ╔═╡ 595862ae-0ee5-47fc-b388-c3986d2c5357
+md"""
+`-` 이론: $X \sim Exp(\lambda) \Rightarrow$ 모든 $t,s > 0$ 에 대하여 $P(X>t)=P(X>t+s|X>s)$가 성립
+"""
+
+# ╔═╡ 1d8dfc66-6b9d-4d8f-b06e-719897cdba3a
+md"""
+`-` 개념: 
+
+- 이해를 위해서 $t=1,s=9$ 대입 => $P(X>1)=P(X>10 | X>9)$
+- 좌변: 시간을 1 기다려서 이벤트가 발생안할 확률 
+- 우변: 시간을 9 기다렸는데 이벤트가 발생안했음 -> 시간 10을 기다려서 이벤트가 발생안할 확률 
+- 예를들어서 $\lambda=0.1$ 이라면 한번 이벤트 발생하는데 평균 시간10이 걸린다는 의미임. => (1) 좌변은 이제 시간1기다림 (2) 우변은 시간 9를 기다림. 곧 "약속된" 시간 10이 완성됨 => 우변이 더 확률이 크지 않을까? => 아니라는거에요!
+"""
+
+# ╔═╡ e9fa46b8-1e1b-4cdf-99a8-77b0dc18a29b
+md"""
+`–` 이해: 지수분포의 근본? 포아송 프로세스 
+- 엄청 짧은 시간 
+- 엄청 작은 확률 
+- 엄청 많은 베르누이 시행이 "독립적"으로 수행 -> 지금까지 실패했다고 해서 이후에 성공확률이 높아지는건 아님. 
+- 우변: 이미 시간9동안 무수히 많은 독립적인 베르누이 시행을 놓친상태임. 그 이후의 시행은 모두 독립이므로 좌변의 확률보다 더 크다고 볼 수 없음. 
+"""
+
+# ╔═╡ b5d6e46f-4884-4d7d-a626-1e357fb5716b
+md"""
+`-` 시뮬레이션으로 확인해보자. 
+"""
+
+# ╔═╡ bfa27b33-3a88-4ce4-a43f-3a5a7a3fdb88
+md"t= $@bind t Slider(0.01:0.01:5,show_value=true)"
+
+# ╔═╡ 235f35dd-e81f-4aff-a0ae-0355f015d7d1
+md"s= $@bind s Slider(0.01:0.01:5,show_value=true)"
+
+# ╔═╡ 91dd34f0-7710-4768-93fd-d50d2ca8dd2e
+let
+	N=500000
+	X = rand(Exponential(1),N) 
+	lhs= length(X[X.>t])/N
+	rhs= length(X[X.>t+s])/length(X[X.>s])
 	md"""
-	### 평균과 분산의 추정 
-	- 평균: $λ
-	- 평균의 추정치: $(mean(X))
-	- 분산: $λ
-	- 분산의 추정치: $(var(X))
+	-  $t=$ $t
+	-  $s=$ $s
+	-  $P(X>t)=$ $(lhs)
+	-  $P(X>t+s|X>s)=$ $(rhs)
 	"""
 end
 
-# ╔═╡ f140fb8e-308f-40e4-a199-b0e0d20dc7da
+
+# ╔═╡ 17a38ef5-7fa0-4471-9da0-bd910f594b48
 md"""
-##### 생각해보니까 왜 평균추정값과 분산추정값이 달라야하나? 
+`–` 무기억성 = 과거는 중요하지 않음! => $P(X>1)=P(X>2|X>1)=P(X>3|X>2)=...$ 
 """
 
-# ╔═╡ a222e7a1-dd18-4416-92eb-320f926d1d77
+# ╔═╡ 9f8e6b38-edf3-428d-b065-bd4f9ea6564e
+let 
+	N = 5000
+	X = rand(Exponential(1),N)
+	prob1 = length(X[X.>1])/N
+	prob2 = length(X[X.>2])/length(X[X.>1])
+	prob3 = length(X[X.>3])/length(X[X.>2])
+	prob4 = length(X[X.>4])/length(X[X.>3])
+	prob5 = length(X[X.>5])/length(X[X.>4])
+	md"""
+	-  $P(X>1)$= $(prob1)
+	-  $P(X>2|X>1)$= $(prob2) 
+	-  $P(X>3|X>2)$= $(prob3)
+	-  $P(X>4|X>3)$= $(prob4)
+	-  $P(X>5|X>4)$= $(prob5)
+	"""
+end
+
+# ╔═╡ d2aeff2e-9a70-4a53-a36d-fb9e8d19fdab
+md"""
+### 몬테카를로 적분 
+"""
+
+# ╔═╡ 6eb0b3f4-369e-4197-b8aa-13d745d76078
+md"""
+##### 예제1: 아래를 계산하라. 
+$\int_0^{\infty} x e^{-x}dx =?$
+"""
+
+# ╔═╡ 7ef592bd-76f7-49c2-ad05-1a3bac201b00
+md"""
+(손풀이)
+$\int_0^\infty x e^{-x}dx =??=1$
+"""
+
+# ╔═╡ b015708a-b199-4999-9f52-088baf8eff8e
+md"""
+(손풀이2)
+$\int_0^\infty x e^{-x}dx =\int_0^\infty x \times e^{-x}dx$은 $\lambda=1$인 지수분포의 평균이다. 따라서 답은 1.
+"""
+
+# ╔═╡ 798d8f8e-4447-4f1f-a394-1e9819796853
+md"""
+(컴퓨터를 이용한 풀이)
+"""
+
+# ╔═╡ 7fae9ab3-86d1-4400-ab12-e50d4fdcb480
+rand(Exponential(1),10000) |> mean
+
+# ╔═╡ d44bf5cd-7b8e-4e18-86fb-25e0e413e86e
+md"""
+##### 예제2: 아래를 계산하라. 
+$\int_0^{\infty} x^2 e^{-x}dx=?$
+"""
+
+# ╔═╡ 3be1e916-fcea-4f09-9b33-911b1e24afb2
+md"""
+(컴퓨터를 이용한 풀이)
+"""
+
+# ╔═╡ fdd7221c-6550-4375-ba81-2678769b2c1f
+rand(Exponential(1),10000) .|> (x->x^2) |> mean
+
+# ╔═╡ 1858c174-a3a0-4a71-883a-265e571b05b3
+md"""
+- 분산 = 제곱의평균 - 평균의제곱 => 제곱의평균 = 분산 + 평균의제곱 = 1+1²
+"""
+
+# ╔═╡ 1117b745-9711-4a7f-8569-51def002998a
+md"""
+##### 예제3: 아래를 계산하라. 
+$\int_0^1 e^{-x} dx=?$
+"""
+
+# ╔═╡ 3fec3dba-b8ab-4186-acca-641e593f00ec
+md"""
+(컴퓨터를 이용한 풀이)
+"""
+
+# ╔═╡ fc50de2c-82d7-49d7-9a2b-f3a16fabd05e
+md"""
+구하는것은 $\int_0^{\infty} I(x \leq 1)e^{-x}dx=E(I(X\leq 1)),~ X\sim Exp(1)$ 로 해석 가능하므로 
+"""
+
+# ╔═╡ 69bb880f-4a28-430c-bb99-2668f2962b59
+md"""
+- 단, $I(x \in A )= \begin{cases} 1 & x\in A \\ 0 & o.w \end{cases}$
+"""
+
+# ╔═╡ b8f80675-dacf-44c6-9f21-43a90bdf14c7
+let
+	X = rand(Exponential(1),10000)
+	f = x -> (x<=1)
+	X .|> f |> mean 
+end
+
+# ╔═╡ ae579f27-6f9e-4998-97d3-9db8ab01d7e4
+md"""
+(컴퓨터를 이용한 풀이2)
+"""
+
+# ╔═╡ 808fecdb-9768-45b7-9c20-2744e33ed8e7
+md"""
+구하는것은 $E(I(X\leq 1))=P(X\leq 1),~ X\sim Exp(1)$ 로 해석 가능하므로 
+"""
+
+# ╔═╡ 35aa02e1-6556-4c79-8ee8-10f1c08eddec
+let
+	N = 10000
+	X = rand(Exponential(1),N)
+	length(X[X.<=1])/N
+end
+
+# ╔═╡ a5d94a21-12b1-47b7-935d-0d937de14550
+md"""
+(컴퓨터를 이용한 풀이3)
+"""
+
+# ╔═╡ eb6ceb7d-f64d-4c6e-a31e-df73ee9f33c3
+md"""
+구하는것은 $\int_0^1 e^{-x} dx=\int_0^1 e^{-x}\times 1 dx=E(e^{-X}), ~ X\sim U(0,1)$ 로 해석 가능하므로 
+"""
+
+# ╔═╡ d2131950-e408-45a7-80a0-002d17d505ce
 let 
 	N = 10000
-	λ = 5 
-	p1=[mean(rand(Poisson(λ),N)) for k in 1:100] |> histogram
-	p2=[var(rand(Poisson(λ),N)) for k in 1:100] |> histogram
-	p3=[(mean(rand(Poisson(λ),N))+var(rand(Poisson(λ),N)))/2  for k in 1:100] |> histogram
-	_p=plot(p1,p2,p3,layout=(3,1),xlim=(4.8,5.2))
-	md""" 
-	mean(X),var(X)로 λ를 추정
-	$(_p)
-	- 위: mean(X)
-	- 아래: var(X)
-	"""
+	X = rand(N)
+	exp.(-X) |> mean
 end 
 
-# ╔═╡ ebe47018-7a6d-42a4-a61a-0079b5c077f8
+# ╔═╡ 6cfdd6e2-8f31-4a3e-8f67-0651480310b5
 md"""
-- 히스토그램을 그려보니까 누가봐도 mean(X)로 λ를 추정하는것이 var(X)로 λ를 추정하는것 보다 좋아 보인다. 
-- 그냥 mean(X)=평균추정량=분산추정량 이라고 주장하면 안되나? => 됩니다! 이게 바로 MLE에요! 
+`-` 참고로 세번째 풀이를 응용하면 아래와 같이 적분구간이 유한한 경우에는 쉽게 그 값을 계산할 수 있다. 
 """
 
-# ╔═╡ 998432de-6dbe-441d-9107-629b9268d68e
-md"1의 이류 평균이 더 추정이 잘 되게 보이니까! 5 주변으로 모여있기 때문에!"
-
-# ╔═╡ 29a2e115-37a7-4f67-a040-a4c1648fdfa6
+# ╔═╡ ebfb2011-0c95-49d8-81f0-fffe45318c18
 md"""
-## 지수분포 ($X \sim Exp(\lambda)$)
+$\int_0^{\pi}\sin(x)dx=\int_0^{\pi}\sin(x)\pi \times \frac{1}{\pi}dx=E(\sin(X)\pi),~ X \sim U(0,\pi)$
 """
 
-# ╔═╡ a185e773-f51e-449b-8d40-de819bd4badf
+# ╔═╡ 80fbc0bd-a137-4883-afb7-cfc44954e33e
+rand(10000)*π # U(0,2π)
+
+# ╔═╡ 5f5b0fe7-cfb2-4190-9ac1-d76cca5f77ff
+mean(rand(10000)*π .|> x-> sin(x)*π)
+
+# ╔═╡ ceee1a6f-f2ec-4af8-a114-29bc58e59d8e
+-cos(π)+cos(0)
+
+# ╔═╡ 5d0c9bff-a6c7-4c76-8b5e-71bb3197ba50
 md"""
-### 지수분포의 요약 
-- X의의미: 시간1에 평균적으로 λ번 발생하는 사건이 있을때 첫 번째 이벤트가 발생할때 까지 걸리는 시간. 
-- X의범위: 시간은 양수이므로 X ≥ 0
-- 파라메터의 의미: (1) λ = 시간1에 평균적으로 발생하는 이벤트의 수 (2) 1/λ = 한번의 이벤트가 발생할때까지 평균적으로 걸리는 시간 
-- 파라메터의 범위: λ>0 
-- pdf: $f(x)=\lambda e^{-\lambda x}$ 
-- mgf: 
-- cdf: $F(x)=1-e^{-\lambda x}$
-- E(X): $\frac{1}{\lambda}$
-- V(S): $\frac{1}{\lambda^2}$
+### 박스뮬러변환
 """
 
-# ╔═╡ 885941da-8604-4af0-8b69-6d564348f116
+# ╔═╡ 49561af0-ac59-4fc2-ac52-13e4239c0fe0
 md"""
-### How to generate it? 
+`-` 이론: $\begin{cases} R^2/2 \sim Exp(1) \\ \Theta \sim U(0,2\pi) \end{cases} \Rightarrow \begin{bmatrix} R\cos \Theta \\ R \sin \Theta \end{bmatrix} \sim N\left (\begin{bmatrix} 0 \\ 0 \end{bmatrix}, \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}\right)$ 
 """
 
-# ╔═╡ cb63ae3e-7de4-4eac-aca3-55561864956d
+# ╔═╡ 42ec1e91-1152-47b2-a43a-55a4f7b19743
 md"""
-##### 평균이 10인 지수분포에서 100개의 샘플을 뽑는 방법 
+- 의미?
 """
 
-# ╔═╡ 2134273b-fca8-4238-b906-f05948fae7d2
-md"""
-(방법1)
-"""
+# ╔═╡ ba38910a-8b0e-405b-a909-2ba77ca0ba13
+@bind i Slider(1:5000)
 
-# ╔═╡ 1da1e41d-73a6-43f4-9d69-3e28b83da8e0
-rand(Exponential(10),100)
-
-# ╔═╡ caa4ea34-e2ae-455a-88a7-6324ff2cc8ef
-md"""
-(방법2) 포아송 -> 지수분포 (X), 포아송프로세스 -> 지수분포 (O)
-- 맥도날드에 시간1당 0.1명씩 평균적으로 방문한다. 1명 방문하는데에는 평균적으로 시간이 10이 걸린다고 볼 수 있음. 
-- 따라서 언뜻생각하면 포아송과 지수분포는 역의 관계라서 포아송분포를 만들고 역수를 취하면 지수분포를 쉽게 만들 수 있을 것 같다.
-"""
-
-# ╔═╡ eb7572bd-63eb-4792-b982-9f320358a99c
-rand(Poisson(0.1),100) # 0이 나오네?
-# 평균이 10인 지수 분포를 위해 역수인 0.1을 입력
-
-# ╔═╡ 1c902aac-d633-4cde-95e1-62e42e0ffe87
-md"""
-- 0이 나온다?
-- 생각해보니까 0이 없다고 쳐도 나올 수 있는 값은 1, 1/2, 1/3, 1/4, ... 따위임 (애초에 틀린 접근)
-- 아이디어: 극한의 베르누이로 포아송을 만들때, 몇번 성공했는지 관심을 가지고 카운팅 했음 => 조금 응용해서 첫 성공까지 몇번의 시도를 해야하는지 카운팅을 한다고 생각하면 시간계산이 가능할것 같다. 
-- 결국 "포아송분포 -> 지수분포"로 추출하는 것이 아니라 "포아송프로세스 -> 지수분포"와 같은 방식으로 추출해야 한다. 
-"""
-
-# ╔═╡ 09a0f94b-e90c-4233-933c-7c1237f11658
-md"""
-(예비학습)
-"""
-
-# ╔═╡ 8a1a0dd9-a5fc-4ea1-b026-c47490db1bc3
-# 유니폼에서 1개의 샘플 추출 
-rand() 
-
-# ╔═╡ 011a3508-939b-47b6-a062-9d61c6ea9eec
-# while문 
+# ╔═╡ 809c3606-8c0c-400c-a698-5d905bf0ebaa
 let 
-	i=0 
-	while i <= 5
-		i=i+1
-	end
-	i
+	Random.seed!(43052)
+	X=randn(5000)
+	Y=randn(5000)
+	plot(X,Y,seriestype=:scatter,alpha=0.1)
+	plot!([0,X[i]],[0,Y[i]])
 end
 
-# ╔═╡ aef02ab9-4e12-4030-b428-f4aa36f65ba6
-md"""
-(풀이시작)
-"""
-
-# ╔═╡ e5ac4d16-20ed-4c35-832f-b6fd5cfad2dd
-# 성공할때까지 시도하는 함수: 성공확률 -> 1회성공까지 시도한 횟수
-function try_until_you_succeed(p) 
-	n_of_try=0 
-	u=0
-	while u < (1-p) # p=0이면 무한반복 
-		u = rand()
-		n_of_try = n_of_try + 1 
-	end
-	return n_of_try 
-end
-
-# ╔═╡ b0d76b5d-cefa-489e-9963-830d6fb710a0
-[try_until_you_succeed(0.1) for k in 1:10000] |> histogram
-
-# ╔═╡ a27efaae-2793-4d8a-8dd6-4900caa80a4a
+# ╔═╡ 26512f21-7de0-4e50-9a76-bf84e64492a4
 let 
-	N = 10000 
-	λ=0.1
-	n=10000
-	p=λ/n
-	Δt = (1/n) # 단위가 시간1이니까 
-	X = [try_until_you_succeed(p) for k in 1:N] .* Δt
-	p1 = X|> histogram
-	p2 = rand(Exponential(10),N) |> histogram
+	N=5000
+	X = rand(Normal(0,1),N)
+	Y = rand(Normal(0,1),N)
+	p1= (X.^2 + Y.^2)./2 |> histogram
+	p2= rand(Exponential(1),N) |> histogram
 	plot(p1,p2,layout=(2,1))
 end 
 
-# ╔═╡ 829ad68b-7352-4d18-bcfd-90919b18648c
+# ╔═╡ e2b0ec64-0f07-4aeb-a7bb-dcfe2d20b300
 md"""
-- 불평: 샘플하나뽑는데 시간이 오래걸림. (정확도를 올릴수록 더 오래걸림)
+`-` 그렇다면 이것을 응용하여 정규분포를 생성할 수 있겠다. 
 """
 
-# ╔═╡ fc1acb74-f856-47c7-b9e1-8d635f0e35ca
-md"""
-(방법3) inverse cdf method 
-- 이론적인 pdf를 알고 있다는 전제가 필요함. 
-- 자세하게 살펴보자. 
-"""
-
-# ╔═╡ c2c198a7-4597-49e2-98d7-8776603db7fa
-md"""
-##### Inverse cdf method를 활용하여 지수분포에서 샘플추출 
-"""
-
-# ╔═╡ cf6a955e-d684-4a16-bc0f-14409f83536a
-md"""
-`-` 아래와 같은 2개의 지수분포의 pdf를 고려하자.
-
-$$f(x)=e^{-x}$$ 
-
-$$g(x)=\frac{1}{5}e^{-\frac{1}{5}x}$$
-"""
-
-# ╔═╡ ed777a37-6351-41a1-aed3-86412c9edaac
-md"""
-`-` 각각의 pdf를 그려보면 아래와 같다. 
-"""
-
-# ╔═╡ db26ed1c-b01a-4f06-886d-4079cf2c139f
+# ╔═╡ b4c8ba40-9409-4ebb-b63c-cae56eebdf26
 let 
-	p1= plot(x-> exp(-x), 0, 20)
-	p2= plot(x-> 1/5* exp(-x/5),0,20)
+	N= 10000000
+	R = .√(2*rand(Exponential(1),N))
+	Θ = rand(N).*2π
+	T = (R,Θ) -> (R*cos(Θ), R*sin(Θ))
+	XY = T.(R,Θ) 
+	X = [XY[i][1] for i in 1:N]
+	Y = [XY[i][2] for i in 1:N]
+	#scatter(X,Y)
+	p1=histogram(X)
+	p2=randn(N) |> histogram
+	plot(p1,p2,layout=(2,1),xlim=(-5,5))
+end 
+
+# ╔═╡ a62728c4-e91a-4345-b0cb-ce1e243f0c81
+md"""
+`-` inverse cdf 기법과 합치면 아래와 같이 정리가능하다. 
+
+$\begin{cases}
+X=\sqrt{-2\log(1-U_1)} \cos(2\pi U_2) \\ 
+Y=\sqrt{-2\log(1-U_1)} \sin(2\pi U_2) 
+\end{cases},~ U_1,U_2 \overset{iid}{\sim} U(0,1)$
+"""
+
+# ╔═╡ 2a7d5045-5391-4769-9d94-3e5deb92924a
+let 
+	N=10000000
+	U₁ = rand(N)
+	U₂ = rand(N)
+	X = @. √(-2log(1-U₁))*cos(2π*U₂)
+	p1 = histogram(X) 
+	p2 = histogram(randn(N))
+	plot(p1,p2,layout=(2,1),xlim=(-5,5))
+end 
+
+# ╔═╡ 0fbbfaea-411d-4cf7-82b4-113038fab29b
+md"""
+(보충학습) 브로드캐스팅 매크로 
+"""
+
+# ╔═╡ 89595f20-6287-4637-a832-b3a2a438b499
+[1,2] .+ 1 .+ 1 .+ 1 .+ 1 .+ 1
+
+# ╔═╡ 71114a46-b1c5-4cb1-8ce1-c69200892eb4
+@. [1,2] + 1 + 1 + 1 + 1 + 1
+
+# ╔═╡ 37265165-a917-4901-89fc-da994967bbed
+md"""
+### $\lambda$에 따른 포아송과 지수분포의 히스토그램변화 관찰 
+"""
+
+# ╔═╡ 959b6759-91b6-41b9-a67c-43a09eab0857
+lambda = @bind λ Slider(0.1:0.01:50,default=10)
+
+# ╔═╡ 1fa64776-6859-4698-bca8-4286bdc01128
+let 
+	p1=histogram(rand(Poisson(λ),10000),title="포아송, λ=$λ")
+	p2=histogram(rand(Exponential(1/λ),10000),title="지수분포, λ=$λ")
 	plot(p1,p2,layout=(2,1))
 end 
 
-# ╔═╡ 7889eeaa-a7b5-4cdd-8b26-c0de2d2981e0
+# ╔═╡ 57da91d7-17e5-4a22-b493-62f9d590151d
 md"""
-`-` 이번에는 각각의 cdf를 그려보자. 
+### 숙제 
 
-$$F(x)=\int_0^x f(\tau)d\tau=\int_0^x e^{-\tau} d\tau = \left[-e^{-\tau}\right]_0^x=1-e^{-x}$$
+(1) inverse cdf를 이용하여 평균이 1인 지수분포를 발생 
 
-$$G(x)=\int_0^x g(\tau)d\tau=\int_0^x \frac{1}{5}e^{-\tau/5} d\tau = \left[-e^{-\tau/5}\right]_0^x=1-e^{-x/5}$$
+(2) 서로독립인 2개의 정규분포를 이용하여 평균이 1인 지수분포를 발생 
 
+(3) 위의 2개의 히스토그램을 비교 
 """
 
-
-# ╔═╡ 23abf65d-276d-4a5d-ae70-b41255b35b48
+# ╔═╡ cc1a7136-1991-4e89-a27b-11634c54a3f9
 let 
-	p1= plot(x -> 1-exp(-x), 0, 20)
-	p2= plot(x -> 1-exp(-x/5), 0, 20)
+	N=10000
+	U₁ = rand(N)
+	X1 = @. √(-log(1-U₁))
+	X2 = rand(Normal(0,1),N)
+	Y = rand(Normal(0,1),N)
+	p1 = histogram(X1,title="(1)")
+	p2 = histogram((X2.^2 + Y.^2)./2,title="(2)")
 	plot(p1,p2,layout=(2,1))
 end 
-
-# ╔═╡ ac1c2222-04b5-4af0-a55c-723b1ad57dec
-md"""
-`-` cdf 해석 
-- 위(평균이1인지수분포) = 5정도면 거의 cdf의 값이 1에 가까워짐 
-- 아래(평균이5인지수분포) = 5정도에서 값이 거의 0.63정도임 => 100번뽑으면 5보다 작은게 63개정도.. 
-
-`-` cdf의 y축에서 랜덤변수를 발생시킨다음 $\rightarrow \downarrow$ 와 같이 이동하여 $x$축에 내린다고 생각해보자. 
-- 첫번째 그림: 대부분 5이하에 떨어짐 
-- 두번째 그림: 약 63% 정도만 5이하에 떨어짐.
-"""
-
-# ╔═╡ 9c2f4080-9dd5-4f85-83f7-42bf3c719e6e
-# F(x) = 1-exp(-x)
-# F: x-> *(-1) -> exp -> *(-1) -> +1 
-# Finv: y-> -1 -> *(-1) -> log -> *(-1) 
-Finv(x) = -log(-(x-1))
-# Ginv(x) =
-
-# ╔═╡ 73e58bb0-65c1-4835-b24b-8a850ca4dce4
-Finv(1-exp(-1))
-
-# ╔═╡ babcf05f-30d2-4f7e-a3ff-c782e4246b88
-# G(x) = 1-exp(-1/5*x)
-# G: x-> *(-1/5) -> exp -> *(-1) -> +1 
-# Ginv: y-> -1 -> *(-1) -> log -> *(-1/5) 
-Ginv(x) = -5log(-(x-1))
-
-# ╔═╡ d60e121c-5af6-4a4e-8450-a97ed000d51b
-Ginv(1-exp(-1/5))
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -413,6 +511,7 @@ PLUTO_PROJECT_TOML_CONTENTS = """
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 
 [compat]
 Distributions = "~0.25.52"
@@ -1413,62 +1512,85 @@ version = "0.9.1+5"
 """
 
 # ╔═╡ Cell order:
-# ╟─dbf8cdd6-7815-49f8-9dd6-5987000792ce
-# ╟─20697867-c74a-4485-bb97-c6a31060669a
-# ╟─64e29d20-aaf5-4fa0-ad03-b283dac52dce
-# ╠═521890de-ab23-11ec-0c2f-2dcaee6dc1bc
-# ╠═61967452-a8e0-46a8-85cb-c0944451c5d2
-# ╠═3f43a098-0653-4cb3-a48e-673e342ae48b
-# ╟─ddae88bf-0b17-40f4-ae33-5cd70aa8a0de
-# ╟─c0e571b7-580a-4b25-ba5b-6cb729ec36b9
-# ╠═d05e9f57-31c0-4c3c-922d-4ac00b399bcd
-# ╟─7807af0d-012a-432a-9a64-5df4a633333b
-# ╟─713fc6aa-3cdb-49ad-903c-9127452e69b9
-# ╟─49500e7a-fc16-48f4-acaf-ce6ccd81207e
-# ╟─443fc984-8109-45c3-a6e5-e6e565dd0491
-# ╠═6d30adc5-4da9-4e85-bd47-e128de6fffb2
-# ╟─9a9ed77b-903e-4587-967c-518343a62e54
-# ╠═b0ca1c8f-272d-4a2f-ac4b-10bd659fceda
-# ╠═32f26826-0860-4f20-830f-1967198b4fee
-# ╟─1e943933-7266-4696-9388-6060d0d173e8
-# ╠═4520bf81-0491-4a47-99c4-45680964654c
-# ╟─ea7e4bb9-5eca-4046-8209-51489614c636
-# ╟─8352dd50-1f7d-4e3d-9365-5af24d43547c
-# ╟─af1c928e-ab6c-4212-88df-e3109503a157
-# ╠═5d376188-fad1-48fb-86a2-7dcc908c337f
-# ╠═0ab7a2d2-0d17-4523-8e91-b28624303524
-# ╠═f140fb8e-308f-40e4-a199-b0e0d20dc7da
-# ╠═a222e7a1-dd18-4416-92eb-320f926d1d77
-# ╟─ebe47018-7a6d-42a4-a61a-0079b5c077f8
-# ╠═998432de-6dbe-441d-9107-629b9268d68e
-# ╟─29a2e115-37a7-4f67-a040-a4c1648fdfa6
-# ╠═a185e773-f51e-449b-8d40-de819bd4badf
-# ╟─885941da-8604-4af0-8b69-6d564348f116
-# ╟─cb63ae3e-7de4-4eac-aca3-55561864956d
-# ╟─2134273b-fca8-4238-b906-f05948fae7d2
-# ╠═1da1e41d-73a6-43f4-9d69-3e28b83da8e0
-# ╟─caa4ea34-e2ae-455a-88a7-6324ff2cc8ef
-# ╠═eb7572bd-63eb-4792-b982-9f320358a99c
-# ╟─1c902aac-d633-4cde-95e1-62e42e0ffe87
-# ╟─09a0f94b-e90c-4233-933c-7c1237f11658
-# ╠═8a1a0dd9-a5fc-4ea1-b026-c47490db1bc3
-# ╠═011a3508-939b-47b6-a062-9d61c6ea9eec
-# ╟─aef02ab9-4e12-4030-b428-f4aa36f65ba6
-# ╠═e5ac4d16-20ed-4c35-832f-b6fd5cfad2dd
-# ╠═b0d76b5d-cefa-489e-9963-830d6fb710a0
-# ╠═a27efaae-2793-4d8a-8dd6-4900caa80a4a
-# ╟─829ad68b-7352-4d18-bcfd-90919b18648c
-# ╟─fc1acb74-f856-47c7-b9e1-8d635f0e35ca
-# ╟─c2c198a7-4597-49e2-98d7-8776603db7fa
-# ╟─cf6a955e-d684-4a16-bc0f-14409f83536a
-# ╟─ed777a37-6351-41a1-aed3-86412c9edaac
-# ╠═db26ed1c-b01a-4f06-886d-4079cf2c139f
-# ╠═7889eeaa-a7b5-4cdd-8b26-c0de2d2981e0
-# ╠═23abf65d-276d-4a5d-ae70-b41255b35b48
-# ╠═ac1c2222-04b5-4af0-a55c-723b1ad57dec
-# ╠═9c2f4080-9dd5-4f85-83f7-42bf3c719e6e
-# ╠═73e58bb0-65c1-4835-b24b-8a850ca4dce4
-# ╠═babcf05f-30d2-4f7e-a3ff-c782e4246b88
-# ╠═d60e121c-5af6-4a4e-8450-a97ed000d51b
+# ╟─80fe12d2-aa70-4eed-a251-92e481d7e40c
+# ╟─82d1b56f-303d-4412-af8d-dc3638b5186f
+# ╟─7f9b98a2-a674-4602-8d91-3923e4d7f5e8
+# ╠═28f2f684-2f28-4f44-a41c-70ade81e3927
+# ╠═f2990d77-1496-4f7a-996f-a362432f27e6
+# ╠═81fee780-c9e6-42aa-9dca-0637aa6a92f6
+# ╟─b9a0a929-debb-4c20-bb35-d664826e8642
+# ╟─ccde90e7-27b4-4c92-8e9a-a19e187535fe
+# ╟─66f787b4-5cda-4883-be6c-b3e9ba5ea3b7
+# ╟─31a07e09-fac8-4082-be3c-9d83fd0cb09d
+# ╟─8546e329-714f-4a5f-a7e4-f2dfbf55496d
+# ╟─6ea24d60-1ddc-4462-af52-5009136051f8
+# ╟─2f7acc36-892b-4368-ac9b-3ae42e20a681
+# ╟─662f2f6b-7c45-4a3a-b936-a0cf95a4c908
+# ╟─4f98ca0f-580e-46b1-a279-0bfda3d40dd2
+# ╟─53fc9117-db8c-424f-9098-e2b887240a72
+# ╠═be2dee73-c901-4f3f-aa96-c62a886b7167
+# ╟─24a3f936-1cda-4d4b-bde7-1dbe81e44909
+# ╟─dbe9914c-da72-41e5-895f-24394097bf22
+# ╠═ff22c6d4-7808-4452-8597-f307dd099e7e
+# ╟─8507fb19-40e9-4bf7-95f5-c107246723e2
+# ╟─e6db3918-4198-4a46-aa5b-663d6c959369
+# ╟─1480a122-73c7-4704-9299-d21fd18feedf
+# ╟─5a95784f-89a8-42cc-95a5-9b0310a23ca7
+# ╠═f53186b7-7fbc-4fe7-8f65-223e681e87e5
+# ╠═f68bd58a-8b00-48ad-8ce1-ba2d19034b95
+# ╟─bc64fe93-e916-49ce-8a1a-084098c2323f
+# ╟─595862ae-0ee5-47fc-b388-c3986d2c5357
+# ╟─1d8dfc66-6b9d-4d8f-b06e-719897cdba3a
+# ╟─e9fa46b8-1e1b-4cdf-99a8-77b0dc18a29b
+# ╟─b5d6e46f-4884-4d7d-a626-1e357fb5716b
+# ╠═bfa27b33-3a88-4ce4-a43f-3a5a7a3fdb88
+# ╠═235f35dd-e81f-4aff-a0ae-0355f015d7d1
+# ╠═91dd34f0-7710-4768-93fd-d50d2ca8dd2e
+# ╟─17a38ef5-7fa0-4471-9da0-bd910f594b48
+# ╠═9f8e6b38-edf3-428d-b065-bd4f9ea6564e
+# ╟─d2aeff2e-9a70-4a53-a36d-fb9e8d19fdab
+# ╟─6eb0b3f4-369e-4197-b8aa-13d745d76078
+# ╟─7ef592bd-76f7-49c2-ad05-1a3bac201b00
+# ╟─b015708a-b199-4999-9f52-088baf8eff8e
+# ╟─798d8f8e-4447-4f1f-a394-1e9819796853
+# ╠═7fae9ab3-86d1-4400-ab12-e50d4fdcb480
+# ╟─d44bf5cd-7b8e-4e18-86fb-25e0e413e86e
+# ╟─3be1e916-fcea-4f09-9b33-911b1e24afb2
+# ╠═fdd7221c-6550-4375-ba81-2678769b2c1f
+# ╟─1858c174-a3a0-4a71-883a-265e571b05b3
+# ╟─1117b745-9711-4a7f-8569-51def002998a
+# ╟─3fec3dba-b8ab-4186-acca-641e593f00ec
+# ╟─fc50de2c-82d7-49d7-9a2b-f3a16fabd05e
+# ╟─69bb880f-4a28-430c-bb99-2668f2962b59
+# ╠═b8f80675-dacf-44c6-9f21-43a90bdf14c7
+# ╟─ae579f27-6f9e-4998-97d3-9db8ab01d7e4
+# ╟─808fecdb-9768-45b7-9c20-2744e33ed8e7
+# ╠═35aa02e1-6556-4c79-8ee8-10f1c08eddec
+# ╟─a5d94a21-12b1-47b7-935d-0d937de14550
+# ╟─eb6ceb7d-f64d-4c6e-a31e-df73ee9f33c3
+# ╠═d2131950-e408-45a7-80a0-002d17d505ce
+# ╟─6cfdd6e2-8f31-4a3e-8f67-0651480310b5
+# ╟─ebfb2011-0c95-49d8-81f0-fffe45318c18
+# ╠═80fbc0bd-a137-4883-afb7-cfc44954e33e
+# ╠═5f5b0fe7-cfb2-4190-9ac1-d76cca5f77ff
+# ╠═ceee1a6f-f2ec-4af8-a114-29bc58e59d8e
+# ╟─5d0c9bff-a6c7-4c76-8b5e-71bb3197ba50
+# ╟─49561af0-ac59-4fc2-ac52-13e4239c0fe0
+# ╠═42ec1e91-1152-47b2-a43a-55a4f7b19743
+# ╠═ba38910a-8b0e-405b-a909-2ba77ca0ba13
+# ╠═809c3606-8c0c-400c-a698-5d905bf0ebaa
+# ╠═26512f21-7de0-4e50-9a76-bf84e64492a4
+# ╟─e2b0ec64-0f07-4aeb-a7bb-dcfe2d20b300
+# ╠═b4c8ba40-9409-4ebb-b63c-cae56eebdf26
+# ╟─a62728c4-e91a-4345-b0cb-ce1e243f0c81
+# ╠═2a7d5045-5391-4769-9d94-3e5deb92924a
+# ╟─0fbbfaea-411d-4cf7-82b4-113038fab29b
+# ╠═89595f20-6287-4637-a832-b3a2a438b499
+# ╠═71114a46-b1c5-4cb1-8ce1-c69200892eb4
+# ╟─37265165-a917-4901-89fc-da994967bbed
+# ╠═959b6759-91b6-41b9-a67c-43a09eab0857
+# ╠═1fa64776-6859-4698-bca8-4286bdc01128
+# ╟─57da91d7-17e5-4a22-b493-62f9d590151d
+# ╠═cc1a7136-1991-4e89-a27b-11634c54a3f9
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
