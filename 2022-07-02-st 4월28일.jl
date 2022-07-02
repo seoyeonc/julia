@@ -464,17 +464,6 @@ let
 	quantile(est,0.025), quantile(est,0.975)
 end
 
-# ╔═╡ 77862acf-55fa-4f2d-aa3d-e468a8ca0ff6
-let 
-	p=0.4
-	n=1000
-	g(x) = sim(√x)
-	g'(x) = x ->ForwardDiff.derivative(g,x)
-	adist = Normal(g(p),√(p*(1-p)/n)*g′(p)) ## CLT + delta method
-	quantile(adist,0.025), quantile(adist,0.975)
-	l,u
-end 
-
 # ╔═╡ 9c98fb88-99cd-4ffc-9e6f-0656734a501e
 # g(p̂) 신뢰구간 시뮬 
 let 
@@ -500,6 +489,9 @@ end
 md"""
 (3) 임의의 $p$에 대한 $g(\hat{p})$에 대한 분산을 시뮬레이션과 delta method를 이용하여 구하고 비교하라.  $p$에 따른 분산변화가 있는가? 
 """
+
+# ╔═╡ 993a1e12-51b2-4c21-af31-c1b53c4b3181
+asin(-0.24)
 
 # ╔═╡ fc0ec748-0a82-4cb1-98e3-0b709a320ba3
 # g(p̂) 신뢰구간 시뮬 
@@ -540,9 +532,15 @@ $H_1:\mu>0$
 이를 위하여 검정통계량으로 $\bar{x}=\frac{1}{30}\sum_{i=1}^{30}x_i=0.01$을 얻었다고 하자. $p$-value의 이론값과 시뮬레이션 값을 계산하고 비교하여라.  
 """
 
+# ╔═╡ 39b55179-9df3-4a70-81e0-d0f8328107d3
+([mean(rand(Normal(0,1),30)) for i in 1:1000]  .>0.01)|> mean
+
 # ╔═╡ 7012b1fc-ae96-40e8-a1f0-848c34fb9174
 ## 시뮬 
 ([mean(rand(Normal(0,1),30)) for i in 1:10000] .> 0.01) |> mean
+
+# ╔═╡ 7e2cd7c7-91f2-4477-98b7-30fd915f6c44
+1- cdf(Normal(0,1/√30),0.01)
 
 # ╔═╡ 3f31cc87-7962-49c8-9b77-9a0d44e4cd09
 ## 이론
@@ -552,6 +550,12 @@ $H_1:\mu>0$
 md"""
 (2) $X_1,\dots,X_n \overset{iid}{\sim} N(\mu,15^2)$ 이라고 하자. 구간 $(\bar{x}-1,\bar{x}+1)$이 $\mu$에 대한 95% 신뢰구간으로 주어지기 위한 표본크기 $n$을 구하여라. (95%이상의 신뢰구간을 만드는 가장 작은 $n$을 구할 것) 
 """
+
+# ╔═╡ 67ccd3c7-f1cc-44fc-bbda-d1dc9980f067
+let
+	n=865
+	1- quantile(Normal(0,15/√n),0.975)# - quantile(Normal(0,15/√n),0.025)
+end
 
 # ╔═╡ 119cfb0c-98f3-4ae6-a8b8-e29bd4d85e9b
 let 
@@ -1742,17 +1746,20 @@ version = "0.9.1+5"
 # ╠═5eed3134-8b1d-4975-97a4-2b6d8a0a99bc
 # ╟─045e8fde-29f2-4cf4-97f7-c53af4c7be61
 # ╠═4d4a9aad-573a-459c-a571-646946b1e96c
-# ╠═77862acf-55fa-4f2d-aa3d-e468a8ca0ff6
 # ╠═9c98fb88-99cd-4ffc-9e6f-0656734a501e
 # ╠═7f4e326f-624e-4e2d-a814-b9ad5445ce63
 # ╟─fcdb21a6-ebbc-4797-9239-87cdc0eeaf73
+# ╠═993a1e12-51b2-4c21-af31-c1b53c4b3181
 # ╠═fc0ec748-0a82-4cb1-98e3-0b709a320ba3
 # ╠═1ee351a8-bc0b-4ace-bb6b-9d2f5e5e32b7
 # ╟─9a2ccacf-c2dc-49a2-93ad-7b52f2540c08
 # ╟─3cbaa153-6a09-414f-beaf-40d50faa01b4
+# ╠═39b55179-9df3-4a70-81e0-d0f8328107d3
 # ╠═7012b1fc-ae96-40e8-a1f0-848c34fb9174
+# ╠═7e2cd7c7-91f2-4477-98b7-30fd915f6c44
 # ╠═3f31cc87-7962-49c8-9b77-9a0d44e4cd09
 # ╟─20a6428d-de79-4c2b-bfeb-823ba56b94cf
+# ╠═67ccd3c7-f1cc-44fc-bbda-d1dc9980f067
 # ╠═119cfb0c-98f3-4ae6-a8b8-e29bd4d85e9b
 # ╟─24d06f21-3ccc-4be7-ad6d-a13aa39b5f59
 # ╟─3fec2a40-315e-40dc-b77b-6f3ae1b8aaa8
