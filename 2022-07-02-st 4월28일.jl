@@ -26,6 +26,11 @@ width=600 height=375  frameborder="0" allow="accelerometer; autoplay; encrypted-
 # ╔═╡ a8260ce7-b754-4423-a626-a3db25cf12ed
 Plots.plotly()
 
+# ╔═╡ b1ebaf27-920e-4061-b53a-40ca7b2694c5
+md"""
+##### 위에가 내가 한 거 제일 아래가 답안!
+"""
+
 # ╔═╡ 0ccda176-3037-4c56-8d22-432597c8014b
 md"""
 ## 1. 줄리아문법 (5점)
@@ -35,6 +40,12 @@ md"""
 md"""
 (1) ForwardDiff 를 이용하여 $f(x)=\frac{1}{\sqrt{2\pi}}e^{-\frac{1}{2}x^2}$ 일때 $f'(0)$ 의 값을 계산하라. 
 """
+
+# ╔═╡ 47c922bf-d768-4be3-912a-546209544235
+let 
+	f(x) = 1/(√(2π)) * exp(-1/2 * x^2)
+	ForwardDiff.derivative(f,0)
+end
 
 # ╔═╡ af42267f-4682-48a9-af8e-8c1419bfbfae
 let 
@@ -47,6 +58,9 @@ md"""
 (2) randn(100) 을 이용하여 Array를 생성하고 양수를 counting 하라. 
 """
 
+# ╔═╡ 4c65ac7b-bff1-4a43-88b1-b84c40958f71
+sum(randn(100) .> 0)
+
 # ╔═╡ 7200e56a-e6b5-42c7-bc8d-574ef4cd6b55
 sum(randn(100) .> 0)
 
@@ -54,6 +68,12 @@ sum(randn(100) .> 0)
 md"""
 (3) 함수 $f(x)=\frac{e^x}{1+e^x}$ 를 (-5,5)의 범위에서 plot 하라. 
 """
+
+# ╔═╡ 920054e0-db84-47a7-a562-135f12949654
+let
+	f(x) = exp(x) / (1 + exp(x))
+	plot(f,-5,5)
+end
 
 # ╔═╡ 5342b97d-b7a6-4552-9141-6b16155c01f3
 let 
@@ -66,6 +86,12 @@ md"""
 (4) 함수 $f(x) = \max(0,x)$ 를 (-5,5)의 범위에서 plot 하라. 
 """
 
+# ╔═╡ a9c6337d-a12c-45bd-bcbf-a11c32eab3cc
+let
+	f(x) = max(0,x)
+	plot(f,-5,5)
+end
+
 # ╔═╡ c2d413c7-d19d-4868-aa35-6b1d86d85741
 let 
 	f(x)=max(0,x)
@@ -77,6 +103,9 @@ md"""
 (5) 아래와 같은 수열을 100항까지 생성하라. 
 - 1, 1+2, 1+2+3,... 
 """
+
+# ╔═╡ 588b036f-e678-4525-a6f7-0df1bd7641ea
+[sum(1:i) for i in 1:100]
 
 # ╔═╡ 96a7319f-2b02-4498-91c9-0da225940e53
 [sum(1:i) for i in 1:100]
@@ -92,6 +121,15 @@ md"""
 (1) $\int_{0}^{1}\sin(x)dx$ 
 """
 
+# ╔═╡ fc141493-0491-42b8-a173-c9c3a05a775c
+mean(sin.(rand(1000)))
+
+# ╔═╡ 8d6af317-b8fb-4bfd-bbdd-b05deb22b38d
+let
+	X = rand(1000)
+	mean(sin.(X))
+end
+
 # ╔═╡ 68e72126-ba72-4afd-adac-53e80b289fa3
 let 
 	X = rand(1000)
@@ -102,6 +140,19 @@ end
 md"""
 (2) $\int_{0}^{\infty} \big(\frac{1}{2}\big)^xdx$
 """
+
+# ╔═╡ 79ad36b5-ac0b-4641-9dc5-3f5de292b40d
+let
+	X = rand(Exponential(1),1000)
+	@. 1/2^(X) .* (X .|> exp)
+	mean(@. 1/2^(X) .* (X .|> exp))
+end
+
+# ╔═╡ 92a302c0-e8cb-4a68-acbe-d003f6c6e66e
+let
+	X = rand(Exponential(1),1000)
+	mean((0.5).^X .* (X .|> exp))
+end
 
 # ╔═╡ cedec46d-b5fa-42ea-b45d-06c0b8707f3b
 let 
@@ -119,6 +170,12 @@ md"""
 (3) $\int_{3}^{\infty}e^{-x}dx$
 """
 
+# ╔═╡ e483ac9a-bc8c-4822-89e3-6bdc79f0b0a1
+let
+	X = rand(Exponential(1),1000)
+	mean(X.>3)
+end
+
 # ╔═╡ 6ee56031-39ac-4f63-8d2b-e4b218338d33
 let 
 	X = rand(Exponential(1),1000)
@@ -135,6 +192,12 @@ md"""
 - note: $\int_{10000}^{\infty}e^{-x}dx / \int_{9999}^{\infty}e^{-x}dx=\int_{1}^{\infty}e^{-x}dx / \int_{0}^{\infty}e^{-x}dx=\int_{1}^{\infty}e^{-x}dx$
 """
 
+# ╔═╡ bda1dc93-5d29-49de-8f97-2803ddd10b67
+let
+	X = rand(Exponential(1),1000)
+	mean(X.>1)
+end
+
 # ╔═╡ 4bb3343f-a789-4a5b-9b11-77805fce7f91
 let 
 	X= rand(Exponential(1),1000)
@@ -145,6 +208,12 @@ end
 md"""
 (5) $\int_{-1.96}^{1.96} \frac{1}{\sqrt{2\pi}}e^{-x^2/2}dx$ 
 """
+
+# ╔═╡ 85ce58eb-8598-488d-8b51-7d2871a6881e
+let
+	X = rand(Exponential(1),1000)
+	mean(-1.96 .< 1/(√(2*π)) * (X.^2/2 .|> exp) .<1.96)
+end
 
 # ╔═╡ d29923cf-298c-49d2-9bc2-ffaa91c54f8b
 let 
@@ -162,6 +231,9 @@ md"""
 (1) $U(0,1)$ 로 부터 $X_1,\dots, X_{1000} \overset{iid}{\sim} bin(5,0.4)$를 생성하라. 
 """
 
+# ╔═╡ 8e3c179d-4737-4f1c-97a3-7dd0049655a3
+[sum(rand(5) .< 0.4) for i in 1:10000]
+
 # ╔═╡ aa9a809f-842f-4dc2-aa65-6084a8cf380a
 [sum(rand(5) .< 0.4) for i in 1:1000] 
 
@@ -169,6 +241,9 @@ md"""
 md"""
 (2) $Poi(1)$ 로 부터 $X_1,\dots, X_{1000} \overset{iid}{\sim} Poi(10)$을 생성하라. 
 """
+
+# ╔═╡ 276e38d8-5ddb-47ff-9369-448ee7f1a7f2
+[sum(rand(Poisson(1),10)) for i in 1:1000]
 
 # ╔═╡ ce3174aa-2a20-4893-86ec-78bbd5e3a396
 [sum(rand(Poisson(1),10)) for i in 1:1000]
@@ -178,6 +253,9 @@ md"""
 (3) $Ber(0.01)$ 로 부터 $X_1, \dots, X_{1000} \overset{iid}{\sim} Poi(7)$을 근사적으로 생성하라. 
 """
 
+# ╔═╡ 394fa0e7-00ab-4fe0-91d9-1076711116cb
+[sum(rand(Bernoulli(0.01),700)) for i in 1:1000]
+
 # ╔═╡ 62f75765-d05c-49bf-9085-d54d56daedc4
 [sum(rand(Bernoulli(0.01),700)) for i in 1:1000]
 
@@ -185,6 +263,14 @@ md"""
 md"""
 (4) $\Gamma(\frac{1}{2},4)$ 로 부터 $X_1,\dots,X_{1000} \overset{iid}{\sim} \chi^2(56)$을 생성하라.
 """
+
+# ╔═╡ 5b5369bb-91af-4a53-b46e-c2828b188b43
+[sum(rand(Gamma(1/2,4),56)./2) for i in 1:1000]
+
+# ╔═╡ b48d4860-b72f-4312-a822-c73e623904eb
+md"
+$$Γ(\frac{k}{2},2) \sim χ^2(k)$$
+"
 
 # ╔═╡ 483db57f-d04b-4edb-8921-712d47ac414c
 [sum(rand(Gamma(0.5,4),56)./2) for i in 1:1000]
@@ -194,8 +280,14 @@ md"""
 (5) $\Gamma(\frac{1}{2},4)$ 로 부터 $X_1,\dots, X_{1000} \overset{iid}{\sim} Exp(2)$를 생성하라. 
 """
 
+# ╔═╡ 9af8c9b8-183b-4d7e-812e-a3b2f6d7dd1c
+[rand(Gamma(0.5,4))/2 + rand(Gamma(0.5,4))/2 for i in 1:1000]
+
 # ╔═╡ 2792df06-4618-4d08-a797-b8f57455b6bd
 [rand(Gamma(0.5,4))/2+rand(Gamma(0.5,4))/2 for i in 1:1000] # 평균이2인 지수분포
+
+# ╔═╡ 72124f50-49cd-4ddd-a998-9e910cb32c7b
+[(rand(Gamma(0.5,4))/2 + rand(Gamma(0.5,4))/2)/4 for i in 1:1000]
 
 # ╔═╡ 63cde8af-626c-4814-9e93-f4850178d3b2
 [(rand(Gamma(0.5,4))/2+rand(Gamma(0.5,4))/2)/4 for i in 1:1000] # 평균이1/2인 지수분포
@@ -205,8 +297,14 @@ md"""
 (6) $Exp(2)$ 로 부터 $X_1,\dots,X_{1000} \overset{iid}{\sim} \Gamma(10,4)$를 생성하라.
 """
 
+# ╔═╡ 2add8203-2cd8-42e7-b9e0-1d6ef9e5811b
+[sum(rand(Exponential(2),10) .*2) for i in 1:1000]
+
 # ╔═╡ bbbca719-599b-4bf4-b9de-40a7565421dd
 [sum(rand(Exponential(2),10) .*2)  for i in 1:1000] # 평균이2인 지수분포 
+
+# ╔═╡ 0d566d3d-3522-4ecb-bd22-16445a25d047
+[sum(rand(Exponential(0.5),10) .*8) for i in 1:1000]
 
 # ╔═╡ e4f4d6e4-847d-4295-bf9c-cdfc261657f3
 [sum(rand(Exponential(0.5),10) .*8)  for i in 1:1000] # 평균이1/2인 지수분포 
@@ -217,8 +315,14 @@ md"""
 - 여기에서 $Exp(10)$는 평균이 1/10인 지수분포이다. 즉 $X\sim Exp(10)$이면 $X$의 pdf는 $f(x)=\frac{1}{10}e^{-x/10}$ 으로 주어진다. 
 """
 
+# ╔═╡ d344dfd5-8302-4956-a716-d6121f58cfa0
+[(rand(Chisq(1)) + rand(Chisq(1)))*5 for i in 1:1000]
+
 # ╔═╡ f5aa6294-de7b-4821-acd2-1ea61745cbe8
 [(rand(Chisq(1)) + rand(Chisq(1)))*5 for i in 1:1000]  # 평균이 10인 지수분포 
+
+# ╔═╡ 683c37a0-bbe5-449a-9ee3-033b39a5cf9c
+[(rand(Chisq(1)) + rand(Chisq(1)))/20 for i in 1:1000]
 
 # ╔═╡ 79a209e7-d885-46f7-8b8d-b530c0cb8150
 [(rand(Chisq(1)) + rand(Chisq(1)))/20 for i in 1:1000]  # 평균이 1/10인 지수분포 
@@ -228,6 +332,9 @@ md"""
 (8) $U(0,1)$ 로 부터 $X_1, \dots, X_{1000} \overset{iid}{\sim} \Gamma(10,2)$을 생성하라.
 """
 
+# ╔═╡ 1987d5c5-9ae5-4d11-8d5c-1571fd2bea49
+[sum(-log.(1 .- rand(10)))*2 for i in 1:1000]
+
 # ╔═╡ 5985edc7-3718-44f8-b13b-62614d04d5b1
 [sum(-log.(1 .- rand(10)))*2 for i in 1:10000]
 
@@ -235,6 +342,13 @@ md"""
 md"""
 (9) $U(0,1)$ 로 부터 $X_1,\dots,X_{1000} \overset{iid}{\sim} N(0,1)$ 을 생성하라. 
 """
+
+# ╔═╡ 1849438d-4a5e-4218-ab81-c57560c7ff4d
+let
+	X1 = rand(1000)
+	X2 = rand(1000)
+	@. √(-2log(1-X1))*cos.(2π * X2)
+end
 
 # ╔═╡ 11b0c663-d04b-4de8-a0cf-4272ea9e8ee1
 let 
@@ -247,6 +361,9 @@ end
 md"""
 (10) $N(0,1)$ 로 부터 $X_1,\dots,X_{1000} \overset{iid}{\sim} Exp(1)$ 을 생성하라. 
 """
+
+# ╔═╡ 5134ff36-16df-425f-92c6-f5301c48866a
+[sum(rand(Normal(0,1),2).^2)/2 for i in 1:1000]
 
 # ╔═╡ bd0d44d6-21bd-4346-a1ec-29bedb81237a
 [sum(rand(Normal(0,1),2).^2)/2 for i in 1:1000]
@@ -263,6 +380,25 @@ md"""
 (1) 평균은 $\hat{p}$로 분산은 $\hat{p}(1-\hat{p})$로 추정한다고 하자. $p=0.4$일 경우 $\mu$와 $\sigma^2$에 대한 95% 점근적 신뢰구간을 시뮬레이션과 delta method를 이용하여 구하고 비교하라. 
 
 """
+
+# ╔═╡ 2c9d513d-a3cd-4a0d-95a2-50ec258c11dc
+let
+	p=0.4
+	n=1000
+	est = [mean(rand(Bernoulli(p),n)) for i in 1:1000]
+	quantile(est,0.025),quantile(est,0.975)
+end
+
+# ╔═╡ 922ce761-49cd-41ef-b0a1-113af3d51b4b
+let 
+	p=0.4
+	n=1000
+	μ= p*(1-p)  ## 점근적으로 근사된 정규분포의 평균 
+	σ= √(p*(1-p)*(1-2p)^2/n)   ## 점근적으로 근사된 정규분포의 표준편차 
+	l = quantile(Normal(μ,σ),0.025) |> x-> round(x,digits=5)
+	u = quantile(Normal(μ,σ),0.975) |> x-> round(x,digits=5)
+	l,u
+end 
 
 # ╔═╡ 144356a9-b763-4365-9c89-6e295d2c650d
 # p̂ 신뢰구간 시뮬 
@@ -318,6 +454,26 @@ md"""
 (2) $g(x)=\sin^{-1}(\sqrt{x})$ 일때 $p=0.4$에 대한 $g(\hat{p})$의 95% 점근적 신뢰구간을 시뮬레이션과 delta method를 이용하여 구하고 비교하라. 
 - 힌트: $\frac{d}{du}\sin^{-1}(u)=1/\sqrt{1-u^2}$.
 """
+
+# ╔═╡ 4d4a9aad-573a-459c-a571-646946b1e96c
+let
+	p=0.4
+	n=1000
+	g(x) = asin(√x)
+	est = [mean(rand(Bernoulli(p),n)) .|>g for i in 1:1000]
+	quantile(est,0.025), quantile(est,0.975)
+end
+
+# ╔═╡ 77862acf-55fa-4f2d-aa3d-e468a8ca0ff6
+let 
+	p=0.4
+	n=1000
+	g(x) = sim(√x)
+	g'(x) = x ->ForwardDiff.derivative(g,x)
+	adist = Normal(g(p),√(p*(1-p)/n)*g′(p)) ## CLT + delta method
+	quantile(adist,0.025), quantile(adist,0.975)
+	l,u
+end 
 
 # ╔═╡ 9c98fb88-99cd-4ffc-9e6f-0656734a501e
 # g(p̂) 신뢰구간 시뮬 
@@ -1500,62 +1656,93 @@ version = "0.9.1+5"
 # ╟─d1feebb2-87f1-4cdb-a5ec-9d4755673682
 # ╠═a6609191-8981-4d00-a5ef-b311d8791a55
 # ╠═a8260ce7-b754-4423-a626-a3db25cf12ed
+# ╟─b1ebaf27-920e-4061-b53a-40ca7b2694c5
 # ╟─0ccda176-3037-4c56-8d22-432597c8014b
 # ╟─6f27a359-bf9e-48b8-a4fd-26c9d499ba8e
+# ╠═47c922bf-d768-4be3-912a-546209544235
 # ╠═af42267f-4682-48a9-af8e-8c1419bfbfae
 # ╟─5f7c6cfc-878c-4266-953b-21419ba07686
+# ╠═4c65ac7b-bff1-4a43-88b1-b84c40958f71
 # ╠═7200e56a-e6b5-42c7-bc8d-574ef4cd6b55
 # ╟─92dfb9c1-f1e9-4de7-8e91-d59384ebfb86
+# ╠═920054e0-db84-47a7-a562-135f12949654
 # ╠═5342b97d-b7a6-4552-9141-6b16155c01f3
 # ╟─069d6e5e-f5a1-47c9-b4f3-c9de6233cff0
+# ╠═a9c6337d-a12c-45bd-bcbf-a11c32eab3cc
 # ╠═c2d413c7-d19d-4868-aa35-6b1d86d85741
 # ╟─ab443d25-6865-48e5-a5ff-998d8c743890
+# ╠═588b036f-e678-4525-a6f7-0df1bd7641ea
 # ╠═96a7319f-2b02-4498-91c9-0da225940e53
 # ╟─018f278c-c373-11ec-1e5b-57380df5b3ff
 # ╟─ea1bfd46-418e-415f-8f6b-8da07287ab82
+# ╠═fc141493-0491-42b8-a173-c9c3a05a775c
+# ╠═8d6af317-b8fb-4bfd-bbdd-b05deb22b38d
 # ╠═68e72126-ba72-4afd-adac-53e80b289fa3
 # ╟─dc51c540-d936-48ae-9144-20ce3717ae9f
+# ╠═79ad36b5-ac0b-4641-9dc5-3f5de292b40d
+# ╠═92a302c0-e8cb-4a68-acbe-d003f6c6e66e
 # ╠═cedec46d-b5fa-42ea-b45d-06c0b8707f3b
 # ╟─333fc0c4-648a-4c6d-9803-d5e0b5eb6640
 # ╟─dd913eda-4442-4948-83e6-e8b1da7d3646
+# ╠═e483ac9a-bc8c-4822-89e3-6bdc79f0b0a1
 # ╠═6ee56031-39ac-4f63-8d2b-e4b218338d33
 # ╟─c798d519-3afb-4265-b69f-a884cfcb7a55
 # ╟─ab5287aa-3b85-47e1-b271-f861854c170a
+# ╠═bda1dc93-5d29-49de-8f97-2803ddd10b67
 # ╠═4bb3343f-a789-4a5b-9b11-77805fce7f91
 # ╟─782a4764-3709-4e86-b990-acc3e10ae2e3
+# ╠═85ce58eb-8598-488d-8b51-7d2871a6881e
 # ╠═d29923cf-298c-49d2-9bc2-ffaa91c54f8b
 # ╟─aa306e3f-6e9a-413c-8e75-22f49fbc150a
 # ╟─b80b9299-7647-4296-b70a-a39e47d75d16
+# ╠═8e3c179d-4737-4f1c-97a3-7dd0049655a3
 # ╠═aa9a809f-842f-4dc2-aa65-6084a8cf380a
 # ╟─b2d9e3bf-25c0-498b-8439-41c0a4f8f615
+# ╠═276e38d8-5ddb-47ff-9369-448ee7f1a7f2
 # ╠═ce3174aa-2a20-4893-86ec-78bbd5e3a396
 # ╟─15926539-ccac-4796-bafb-4d828145037e
+# ╠═394fa0e7-00ab-4fe0-91d9-1076711116cb
 # ╠═62f75765-d05c-49bf-9085-d54d56daedc4
 # ╟─41239d55-e7d7-4727-b409-3fbc01fc2fc5
+# ╠═5b5369bb-91af-4a53-b46e-c2828b188b43
+# ╠═b48d4860-b72f-4312-a822-c73e623904eb
 # ╠═483db57f-d04b-4edb-8921-712d47ac414c
 # ╟─627b5bcf-d3a4-412e-aee4-a9a5df0bb1b0
+# ╠═9af8c9b8-183b-4d7e-812e-a3b2f6d7dd1c
 # ╠═2792df06-4618-4d08-a797-b8f57455b6bd
+# ╠═72124f50-49cd-4ddd-a998-9e910cb32c7b
 # ╠═63cde8af-626c-4814-9e93-f4850178d3b2
 # ╟─253c7b93-afa6-49e8-b615-1aa64a22b168
+# ╠═2add8203-2cd8-42e7-b9e0-1d6ef9e5811b
 # ╠═bbbca719-599b-4bf4-b9de-40a7565421dd
+# ╠═0d566d3d-3522-4ecb-bd22-16445a25d047
 # ╠═e4f4d6e4-847d-4295-bf9c-cdfc261657f3
 # ╟─501ce3c3-891c-48d6-a9a5-c035072719fb
+# ╠═d344dfd5-8302-4956-a716-d6121f58cfa0
 # ╠═f5aa6294-de7b-4821-acd2-1ea61745cbe8
+# ╠═683c37a0-bbe5-449a-9ee3-033b39a5cf9c
 # ╠═79a209e7-d885-46f7-8b8d-b530c0cb8150
 # ╟─908f12ab-790c-4a64-b701-0cb6021c4fc4
+# ╠═1987d5c5-9ae5-4d11-8d5c-1571fd2bea49
 # ╠═5985edc7-3718-44f8-b13b-62614d04d5b1
 # ╟─3353dd22-4344-4f09-80ef-3c244d4254bf
+# ╠═1849438d-4a5e-4218-ab81-c57560c7ff4d
 # ╠═11b0c663-d04b-4de8-a0cf-4272ea9e8ee1
 # ╟─e8ded97f-fa69-4f5f-a85c-74faa4911eba
+# ╠═5134ff36-16df-425f-92c6-f5301c48866a
 # ╠═bd0d44d6-21bd-4346-a1ec-29bedb81237a
 # ╟─93dfe906-ceb8-477e-9146-dc952e2052c0
 # ╟─aafae26c-8e6d-483a-b8ff-c18696c61744
+# ╠═2c9d513d-a3cd-4a0d-95a2-50ec258c11dc
+# ╠═922ce761-49cd-41ef-b0a1-113af3d51b4b
 # ╠═144356a9-b763-4365-9c89-6e295d2c650d
 # ╠═94891d36-63d5-4e67-93d2-44d3d675b408
 # ╠═9ed1cd40-a1db-49a8-b10c-f346cfb816d0
 # ╠═bd7ee6f2-4be0-4fde-a303-822a9095d88f
 # ╠═5eed3134-8b1d-4975-97a4-2b6d8a0a99bc
 # ╟─045e8fde-29f2-4cf4-97f7-c53af4c7be61
+# ╠═4d4a9aad-573a-459c-a571-646946b1e96c
+# ╠═77862acf-55fa-4f2d-aa3d-e468a8ca0ff6
 # ╠═9c98fb88-99cd-4ffc-9e6f-0656734a501e
 # ╠═7f4e326f-624e-4e2d-a814-b9ad5445ce63
 # ╟─fcdb21a6-ebbc-4797-9239-87cdc0eeaf73
