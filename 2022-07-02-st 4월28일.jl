@@ -26,11 +26,6 @@ width=600 height=375  frameborder="0" allow="accelerometer; autoplay; encrypted-
 # ╔═╡ a8260ce7-b754-4423-a626-a3db25cf12ed
 Plots.plotly()
 
-# ╔═╡ b1ebaf27-920e-4061-b53a-40ca7b2694c5
-md"""
-##### 위에가 내가 한 거 제일 아래가 답안!
-"""
-
 # ╔═╡ 0ccda176-3037-4c56-8d22-432597c8014b
 md"""
 ## 1. 줄리아문법 (5점)
@@ -268,9 +263,9 @@ md"""
 [sum(rand(Gamma(1/2,4),56)./2) for i in 1:1000]
 
 # ╔═╡ b48d4860-b72f-4312-a822-c73e623904eb
-md"
+md"""
 $$Γ(\frac{k}{2},2) \sim χ^2(k)$$
-"
+"""
 
 # ╔═╡ 483db57f-d04b-4edb-8921-712d47ac414c
 [sum(rand(Gamma(0.5,4),56)./2) for i in 1:1000]
@@ -1660,7 +1655,6 @@ version = "0.9.1+5"
 # ╟─d1feebb2-87f1-4cdb-a5ec-9d4755673682
 # ╠═a6609191-8981-4d00-a5ef-b311d8791a55
 # ╠═a8260ce7-b754-4423-a626-a3db25cf12ed
-# ╟─b1ebaf27-920e-4061-b53a-40ca7b2694c5
 # ╟─0ccda176-3037-4c56-8d22-432597c8014b
 # ╟─6f27a359-bf9e-48b8-a4fd-26c9d499ba8e
 # ╠═47c922bf-d768-4be3-912a-546209544235
@@ -1709,7 +1703,7 @@ version = "0.9.1+5"
 # ╠═62f75765-d05c-49bf-9085-d54d56daedc4
 # ╟─41239d55-e7d7-4727-b409-3fbc01fc2fc5
 # ╠═5b5369bb-91af-4a53-b46e-c2828b188b43
-# ╠═b48d4860-b72f-4312-a822-c73e623904eb
+# ╟─b48d4860-b72f-4312-a822-c73e623904eb
 # ╠═483db57f-d04b-4edb-8921-712d47ac414c
 # ╟─627b5bcf-d3a4-412e-aee4-a9a5df0bb1b0
 # ╠═9af8c9b8-183b-4d7e-812e-a3b2f6d7dd1c
